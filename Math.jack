@@ -8,13 +8,33 @@
  * Note: Jack compilers implement multiplication and division using OS method calls.
  */
 class Math {
+    static int qMultY;
+    static Array twoToThe;
 
     /** Initializes the library. */
     function void init() {
+        var int i, value;
+        var int ARR_SIZE;
+        let i = 0;
+        let twoToThe = Array.new(16);
+        let value = 1;
+        let ARR_SIZE = 16;
+        while ( i < ARR_SIZE){
+            let twoToThe[i] = value;
+            let value = value + value;
+            let i = i + 1;
+        }
+        return ; 
     }
 
     /** Returns the absolute value of x. */
     function int abs(int x) {
+        var int res;
+        let res = x;
+        if (x < 0) {
+            let res = -x;
+        }
+        return res;
     }
 
     /** Returns the product of x and y. 
@@ -23,6 +43,36 @@ class Math {
      *  the Jack expressions x*y and multiply(x,y) return the same value.
      */
     function int multiply(int x, int y) {
+        var int sum;
+        var int shiftedLeftX, pow, ind;
+        let sum = 0;
+        let shiftedLeftX = x;
+        let ind = 0;
+        while (ind < 16){
+            let pow = twoToThe[ind];
+            let ind = ind + 1;
+            if (pow =( pow & y)) {
+                let sum = sum + shiftedLeftX;
+            }
+            let shiftedLeftX = shiftedLeftX + shiftedLeftX;
+        }
+        return sum;
+    }
+
+    /** Returns the integer part of x/y, and both x and y are greater or equals to zero. */
+    function int absDivide(int x, int y){
+        var int q;
+        if (((y < 0) | (y > x))){
+            return 0;
+        }
+        let q = Math.absDivide(x, (y+y));
+        if ( (x- qMultY) < y){
+            return q + q;
+        }
+        else{
+            let qMultY = qMultY + y;
+            return q + q + 1;
+        }
     }
 
     /** Returns the integer part of x/y.
@@ -31,17 +81,55 @@ class Math {
      *  the Jack expressions x/y and divide(x,y) return the same value.
      */
     function int divide(int x, int y) {
+        var int absX, absY;
+        var int divisionResult;
+        let qMultY = 0;
+        let absX = Math.abs(x);
+        let absY = Math.abs(y);
+        let divisionResult = Math.absDivide(absX, absY);
+        if (((x < 0) & (y > 0))| ((x > 0) & (y < 0))){
+            let divisionResult = divisionResult - (divisionResult + divisionResult);
+        }
+        else {
+        return divisionResult;
+        }
     }
 
     /** Returns the integer part of the square root of x. */
     function int sqrt(int x) {
+        var int y, j, n;
+        var int shiftedX, pow;
+        let n = 16;
+        let shiftedX = x;
+        while (shiftedX > 0){
+            let n = n + 1;
+            let shiftedX = #shiftedX;
+        }
+        let y =0;
+        let j = #n - 1;
+        while ((j > 0) | (j = 0)){
+            let pow = twoToThe[j];
+            if ((((y + pow)*(y+pow) < x )| ((y + pow)*(y+pow) = x )& ((y + pow)*(y+pow) > 0)) ){
+                let y = y +pow;
+            }
+            let j = j - 1;
+        }
+        return y;
     }
 
     /** Returns the greater number. */
     function int max(int a, int b) {
+        if (a > b){
+            return a;
+        }
+        return b;
     }
 
     /** Returns the smaller number. */
     function int min(int a, int b) {
+        if (a < b){
+            return a;
+        }
+        return b;
     }
 }
