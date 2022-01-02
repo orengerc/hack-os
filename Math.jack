@@ -10,11 +10,11 @@
 class Math {
     static int qMultY;
     static Array twoToThe;
+    static int ARR_SIZE;
 
     /** Initializes the library. */
     function void init() {
         var int i, value;
-        var int ARR_SIZE;
         let i = 0;
         let twoToThe = Array.new(16);
         let value = 1;
@@ -88,10 +88,10 @@ class Math {
         let absY = Math.abs(y);
         let divisionResult = Math.absDivide(absX, absY);
         if (((x < 0) & (y > 0))| ((x > 0) & (y < 0))){
-            let divisionResult = divisionResult - (divisionResult + divisionResult);
+            return divisionResult - (divisionResult + divisionResult);
         }
         else {
-        return divisionResult;
+            return divisionResult;
         }
     }
 
