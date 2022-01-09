@@ -1,7 +1,7 @@
-bartsimp, lisasimp
+iris.b, oren_gerc
 ===============================================================================
-Bart Simpson, ID 011111111, bart@mail.huji.ac.il
-Lisa Simpson, ID 022222222, lisa@mail.huji.ac.il
+Iris Burmistrov, ID 318626678, iris.burmistrov@mail.huji.ac.il
+Oren Gercenshtein, ID 316120203, oren.gercenshtei@mail.huji.ac.il
 ===============================================================================
 
                            Project 12 - The Operating System
@@ -11,14 +11,14 @@ Lisa Simpson, ID 022222222, lisa@mail.huji.ac.il
 Submitted Files
 ---------------
 README - This file.
-Array.jack - 
-Keyboard.jack - 
-Math.jack - 
-Memory.jack - 
-Output.jack - 
-Screen.jack - 
-String.jack - 
-Sys.jack - 
+Array.jack - implements an array
+Keyboard.jack - implements the keyboard
+Math.jack - implements the math lib
+Memory.jack - implements the memory of the computer
+Output.jack - implements output to user
+Screen.jack - implements screen
+String.jack - implements strings
+Sys.jack - implements system stuff
 
 Remarks
 -------
