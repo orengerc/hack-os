@@ -8,7 +8,7 @@ class Main {
 
     /** Performs various string manipulations and displays their results. */
     function void main() {
-        var String s;
+                var String s;
         var String i;
         
         let s = String.new(0); // a zero-capacity string should be supported
