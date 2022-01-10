@@ -18,8 +18,8 @@ class Output {
 
     // Character map for displaying characters
     static Array charMaps;
-    static int curser_x;
-    static int curser_y;
+    static int cursor_x;
+    static int cursor_y;
     static int curser_row;
     static int curser_col;
     static int ROWS;
@@ -27,14 +27,16 @@ class Output {
 
     /** Initializes the screen, and locates the cursor at the screen's top-left. */
     function void init() {
-        do initMap();
-        let curser_x = 0;
-        let curser_y = 0;
+        do Output.initMap();
+        let cursor_x = 0;
+        let cursor_y = 0;
         let curser_row = 0;
         let curser_col = 0;
         let ROWS = 23;
         let COLS = 64;
         do Output.moveCursor(0,0);
+
+        return;
     }
 
     // Initializes the character map array
@@ -198,12 +200,39 @@ class Output {
         return;
     }
 
+    function int getCursorAddress(){
+        return (Screen.startScreenAdr() + ((32*cursor_y) + (cursor_x/16)));
+    }
+
     /** Displays the given character at the cursor location,
      *  and advances the cursor one column forward. */
     function void printChar(char c) {
-        var int location;
-        let location = Screen.startScreenAdr + ((32*cursor_y) + (cursor_x/16));
-        // do Memory.poke(location, getMap(c));
+        var int i, location, address, line;
+        var Array map;
+
+        //special cases
+        if (c = String.newLine()){
+            do Output.println();
+            return;
+        }
+        if (c = String.backSpace()){
+            do Output.backSpace();
+            return;
+        }
+
+
+        //else:
+
+        let address = Output.getCursorAddress();
+        let map = Output.getMap(c);
+        let i = 0;
+
+        while(i < 11) {
+            let line = map[i];
+            do Memory.poke(address, line);
+            let i = i + 1;
+        }
+
         if (curser_col = 62){
            do Output.moveCursor(0, curser_row + 1);
         }
@@ -218,9 +247,9 @@ class Output {
     function void printString(String s) {
         var int len, i;
         let i = 0;
-        let len = s.length;
+        let len = s.length();
         while (i < len){
-            do printChar(s.charAt(i));
+            do Output.printChar(s.charAt(i));
             let i = i + 1;
         }
         return;
@@ -232,7 +261,7 @@ class Output {
         var String str_i;
         let str_i = String.new(16);
         do str_i.setInt(i);
-        do printString(str_i);
+        do Output.printString(str_i);
         return;
     }
 
