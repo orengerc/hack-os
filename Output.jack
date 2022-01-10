@@ -17,10 +17,24 @@
 class Output {
 
     // Character map for displaying characters
-    static Array charMaps; 
+    static Array charMaps;
+    static int curser_x;
+    static int curser_y;
+    static int curser_row;
+    static int curser_col;
+    static int ROWS;
+    static int COLS; 
 
     /** Initializes the screen, and locates the cursor at the screen's top-left. */
     function void init() {
+        do initMap();
+        let curser_x = 0;
+        let curser_y = 0;
+        let curser_row = 0;
+        let curser_col = 0;
+        let ROWS = 23;
+        let COLS = 64;
+        do Output.moveCursor(0,0);
     }
 
     // Initializes the character map array
@@ -176,28 +190,73 @@ class Output {
     /** Moves the cursor to the j-th column of the i-th row,
      *  and erases the character displayed there. */
     function void moveCursor(int i, int j) {
+        let curser_row = i;
+        let cursor_x = 8*j;
+        let curser_col = j;
+        let cursor_y = 11 * i;
+        // todo: display cursor.
+        return;
     }
 
     /** Displays the given character at the cursor location,
      *  and advances the cursor one column forward. */
     function void printChar(char c) {
+        var int location;
+        let location = Screen.startScreenAdr + ((32*cursor_y) + (cursor_x/16));
+        // do Memory.poke(location, getMap(c));
+        if (curser_col = 62){
+           do Output.moveCursor(0, curser_row + 1);
+        }
+        else {
+            do Output.moveCursor(curser_col + 1, curser_row);
+        }
+        return;
     }
 
     /** displays the given string starting at the cursor location,
      *  and advances the cursor appropriately. */
     function void printString(String s) {
+        var int len, i;
+        let i = 0;
+        let len = s.length;
+        while (i < len){
+            do printChar(s.charAt(i));
+            let i = i + 1;
+        }
+        return;
     }
 
     /** Displays the given integer starting at the cursor location,
      *  and advances the cursor appropriately. */
     function void printInt(int i) {
+        var String str_i;
+        let str_i = String.new(16);
+        do str_i.setInt(i);
+        do printString(str_i);
+        return;
     }
 
     /** Advances the cursor to the beginning of the next line. */
     function void println() {
+        if (curser_row = 22){
+            do Output.moveCursor(0, 0);
+        }
+        else {
+            do Output.moveCursor(0, curser_row + 1);
+        }
+        return;
     }
 
     /** Moves the cursor one column back. */
     function void backSpace() {
+        if ((curser_row = 0) & (curser_col = 0)){
+            return;
+        }
+        if ((curser_col = 0)){
+            do Output.moveCursor(curser_row - 1, 63);
+            return;
+        }
+        do Output.moveCursor(curser_row, curser_col - 1);
+        return;
     }
 }
