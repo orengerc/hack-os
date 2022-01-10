@@ -53,6 +53,7 @@ class Main {
 	        }
 	    }
 	
+		
     	let ok = false;
         do Output.printString("readLine test:");
         do Output.println();
@@ -69,6 +70,7 @@ class Main {
    	            }
     	    }
     	}
+		
 
 	    let ok = false;
         do Output.printString("readInt test:");
