@@ -114,19 +114,27 @@ class Memory {
     /** Returns the maximal element contained in the given Array/object. */
 	function int max(Array o) {
 		var int max, i, curr;
-        let max = -32767;  //-infinity
+        let max = -32766;  //-infinity
         let i = 0;
-
+		// do Output.printInt(RAM[o-1] - 1);
+        // do Output.println();
         //iterate untill the end of array:
-        while(i < RAM[o-1]){
+        while(i < (RAM[o-1]-1)){
+			// do Output.printInt(o[i]);
+            // do Output.println();
             let curr = o[i];
-
+			// do Output.printInt(curr);
+			// do Output.println();
             //if found larger than max, switch max
             if(curr > max){
                 let max = curr;
             }
             let i = i + 1;
         }
+		// do Output.printInt(max);
+		// do Output.println();
+        // do Output.printChar(97);
+		// do Output.println();
 
         return max;
     }

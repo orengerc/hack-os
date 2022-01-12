@@ -125,6 +125,7 @@ class String {
     }
 
 
+
     /** Returns the new line character. */
     function char newLine() {
         return 128;

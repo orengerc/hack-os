@@ -28,26 +28,38 @@ class Sys {
 
     /** Halts the program execution. */
     function void halt() {
+            do Output.printString("halt");
+            do Output.println();
 		    while(1=1){}
+            return;
     }
 
     /** Waits approximately duration milliseconds and returns.  */
     function void wait(int duration) {
-        var int i, timeConstant, calc;
-        let i = 0;
-        let timeConstant = 1500;
-        while(Math.divide(i, timeConstant) < duration){
-            //make some random & constant calculation
-            let calc = Math.multiply(17, 17);
-            let i = i + 1;
-		    } 
-		    return;
+        var int calc, outer, inner, timeConst;
+        let calc = 10000;
+        let timeConst = 1500;
+        let inner = 0;
+        let outer = 0;
+
+        //loop
+        while (outer < duration){
+            while (inner < timeConst){
+                let calc = calc / 2;
+                let inner = inner +1;
+            }
+            let outer = outer + 1;
+        }
+        
+        return;
     }
+
+
 
     /** Displays the given error code in the form "ERR<errorCode>",
      *  and halts the program's execution. */
     function void error(int errorCode) {
-        do Output.printString("ERR<")
+        do Output.printString("ERR<");
         do Output.printInt(errorCode);
         do Output.printString(">");
         do Sys.halt();

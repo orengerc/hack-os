@@ -18,24 +18,17 @@ class Output {
 
     // Character map for displaying characters
     static Array charMaps;
-    static int cursor_x;
-    static int cursor_y;
     static int curser_row;
     static int curser_col;
-    static int ROWS;
-    static int COLS; 
+    static int cur_place;
 
     /** Initializes the screen, and locates the cursor at the screen's top-left. */
     function void init() {
         do Output.initMap();
-        let cursor_x = 0;
-        let cursor_y = 0;
         let curser_row = 0;
         let curser_col = 0;
-        let ROWS = 23;
-        let COLS = 64;
+        let cur_place = 0;
         do Output.moveCursor(0,0);
-
         return;
     }
 
@@ -87,7 +80,7 @@ class Output {
         do Output.create(64,30,51,51,59,59,59,27,3,30,0,0);  // @
         do Output.create(63,30,51,51,24,12,12,0,12,12,0,0);  // ?
 
-        do Output.create(65,0,0,0,0,0,0,0,0,0,0,0);          // A ** TO BE FILLED **
+        do Output.create(65,12,30,51,51,63,51,51,51,51,0,0);          // A ** TO BE FILLED **
         do Output.create(66,31,51,51,51,31,51,51,51,31,0,0); // B
         do Output.create(67,28,54,35,3,3,3,35,54,28,0,0);    // C
         do Output.create(68,15,27,51,51,51,51,51,27,15,0,0); // D
@@ -193,23 +186,24 @@ class Output {
      *  and erases the character displayed there. */
     function void moveCursor(int i, int j) {
         let curser_row = i;
-        let cursor_x = 8*j;
         let curser_col = j;
-        let cursor_y = 11 * i;
-        // todo: display cursor.
+        let cur_place = Output.getCursorAddress();
         return;
     }
 
-    function int getCursorAddress(){
-        return (Screen.startScreenAdr() + ((32*cursor_y) + (cursor_x/16)));
+    function int getCursorAddress() {
+        return 16384 + (11* (32 *curser_row)) + (curser_col/2);
     }
 
     /** Displays the given character at the cursor location,
      *  and advances the cursor one column forward. */
     function void printChar(char c) {
-        var int i, location, address, line;
+        var int i, address;
+        var int tmp;
+        var int factor1, factor2, dir;
         var Array map;
-
+        
+        let factor2 = 255;
         //special cases
         if (c = String.newLine()){
             do Output.println();
@@ -219,25 +213,40 @@ class Output {
             do Output.backSpace();
             return;
         }
-
-
         //else:
+        if ((1&curser_col)) {
+            let factor1 = 256;
+        }
+        else{
+            let factor1 = 1;
+        }
 
-        let address = Output.getCursorAddress();
         let map = Output.getMap(c);
         let i = 0;
-
         while(i < 11) {
-            let line = map[i];
-            do Memory.poke(address, line);
+            let address = cur_place + (32*i);
+            let tmp = Memory.peek(address);
+            if ((1&curser_col)){
+                do Memory.poke(address, (factor2&tmp) + (256*map[i]));
+            }
+            else{
+                do Memory.poke(address, ((~factor2)&tmp) + map[i]);
+            }
             let i = i + 1;
         }
 
-        if (curser_col = 62){
-           do Output.moveCursor(0, curser_row + 1);
+        if (curser_col = 63){
+           if (curser_row = 22){
+               do Output.moveCursor(0, 0);
+               return;
+           }
+           else{
+                do Output.moveCursor(curser_row + 1,0);
+                return;
+           }
         }
         else {
-            do Output.moveCursor(curser_col + 1, curser_row);
+            do Output.moveCursor(curser_row, curser_col + 1);
         }
         return;
     }
@@ -271,7 +280,7 @@ class Output {
             do Output.moveCursor(0, 0);
         }
         else {
-            do Output.moveCursor(0, curser_row + 1);
+            do Output.moveCursor(curser_row + 1, 0);
         }
         return;
     }
