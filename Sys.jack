@@ -28,7 +28,6 @@ class Sys {
 
     /** Halts the program execution. */
     function void halt() {
-            do Output.printString("halt");
             do Output.println();
 		    while(1=1){}
             return;

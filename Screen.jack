@@ -56,13 +56,15 @@ class Screen {
         }
         return;
     }
-
+    function int calcAdr(int x, int y){
+        return (^(^(^(^(^y))))) + (#(#(#(#x))));
+    }
     /** Draws the (x,y) pixel, using the current color. */
     function void drawPixel(int x, int y) {
         var int address;
         var int xMod16, twoTotheXmod16;
         var int value;
-        let address = (32*y) + (x/16);
+        let address = Screen.calcAdr(x,y);
         let value = Memory.peek(startScreenAdr + address);
         let xMod16 = x & 15;
         let twoTotheXmod16 = twoTothe[xMod16];
@@ -87,15 +89,12 @@ class Screen {
         let b = 0;
         let diff = 0;
         while (a < (dx + 1) & (b < (dy + 1))){
-            // do Output.printString("1");
             do Screen.drawPixel(x1 + a, y1 - b);
             if (diff < 0){
-                // do Output.printString("2");
                let a = a + 1;
                let diff = diff + dy; 
             }
             else{
-                // do Output.printString("111");
                 let b = b + 1;
                let diff = diff - dx; 
             }
@@ -128,14 +127,41 @@ class Screen {
     
     function void drawLineOnlyRight(int x1, int y1, int x2, int y2) {
         var int minX, maxX, dx, counter;
+        var int minMod16, address ;
         let minX = Math.min(x1, x2);
         let maxX = Math.max(x1, x2);
-        let dx = maxX - minX;
+        let minMod16 = minX&15;
         let counter = 0;
-        while (counter < dx){
-            do Screen.drawPixel(minX+counter, y1);
-            let counter = counter + 1;
+        let dx = maxX - minX;
+        if (dx < 17){
+            while (counter < (dx+1)){
+                do Screen.drawPixel(minX+counter, y1);
+                let counter = counter + 1;
+            }
+            return;
         }
+        while (minMod16 > 0){
+            do  Screen.drawPixel(minX, y1);
+            let minX = minX +1;
+            let minMod16 = minX & 15;
+        }
+        let dx = maxX - minX;
+        while ( (dx > 15)){
+            let address =  Screen.calcAdr(minX,y1);
+            if (color){
+                do Memory.poke(startScreenAdr + address, -1);
+            }
+            else{
+                do Memory.poke(startScreenAdr + address, 0);
+            }
+            let minX = minX + 16;
+            let dx = maxX - minX;
+        }
+        while (minX < (maxX+1)){
+            do Screen.drawPixel(minX, y1);
+            let minX = minX + 1;
+        }
+        
         return;
     }
 
@@ -145,7 +171,7 @@ class Screen {
         let maxY = Math.max(y1, y2);
         let dy = maxY - minY;
         let counter = 0;
-        while (counter < dy){
+        while (counter < (dy+1)){
             do Screen.drawPixel(x1, minY+counter);
             let counter = counter + 1;
         }
